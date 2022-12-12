@@ -21,7 +21,7 @@ error_reporting(E_ALL);
    
     function addProduct($ean13, $ref, $name, $qty, $text, $features, $price, $imgUrl, $category_id) {
         $product = new Product();              // Create new product in prestashop
-        $product->ean13 = $ean13;
+        // $product->ean13 = $ean13;
 
         if (!empty($ref)){
             // $product->reference = $ref;
@@ -53,10 +53,16 @@ error_reporting(E_ALL);
         $product->minimal_quantity = 1;
         $product->on_sale = 0;
         $product->online_only = 0;
-        $product->link_rewrite = createMultiLangField(Tools::str2url($name)); // Contribution credits: mfdenis
-        $product->add();                        // Submit new product
+        $product->link_rewrite = createMultiLangField(Tools::str2url($name)); 
+        try {
+            $product->add();                // Submit new product
+        }            
+                    
+        catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+        }
         StockAvailable::setQuantity($product->id, null, $qty); // id_product, id_product_attribute, quantity
-        // $product->addToCategories($catAll);     // After product is submitted insert all categories
+        $product->addToCategories(array($category_id));     // After product is submitted insert all categories
         // Insert "feature name" and "feature value"
         if (is_array($features)) {
             $array_kv = array();
@@ -204,12 +210,28 @@ error_reporting(E_ALL);
 
 
 
-    $string = file_get_contents_utf8("/var/www/html/products_data/products.json");
+    $string = file_get_contents_utf8("/var/www/html/products_un.json");
     $json_a = json_decode($string, true);
     $categories_id = array();
     
-    // Clear categories and products
+    // Clear categories, products, features
     Db::getInstance()->execute('TRUNCATE TABLE ps_product;');
+    Db::getInstance()->execute('TRUNCATE TABLE ps_product_shop;');
+    Db::getInstance()->execute('TRUNCATE TABLE ps_product_lang;');
+
+    Db::getInstance()->execute('TRUNCATE TABLE ps_image;');
+    Db::getInstance()->execute('TRUNCATE TABLE ps_image_shop;');
+    Db::getInstance()->execute('TRUNCATE TABLE ps_image_lang;');
+
+
+    Db::getInstance()->execute('TRUNCATE TABLE ps_feature;');
+    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_shop;');
+    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_lang;');
+
+    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_value;');
+    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_value_lang;');
+    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_product;');
+
     Db::getInstance()->execute('DELETE FROM ps_category WHERE id_category>2;');
     foreach ($categories as $i => $value) {
         $parrent_id = Configuration::get('PS_HOME_CATEGORY');
