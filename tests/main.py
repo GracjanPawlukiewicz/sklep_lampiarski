@@ -23,7 +23,7 @@ def get_random_string(length: int) -> str:
 
 
 # inherit TestCase Class and create a new test class
-class PythonOrgSearch(unittest.TestCase):
+class LampexTest(unittest.TestCase):
 
     # initialization of webdriver
     def setUp(self):
@@ -69,8 +69,6 @@ class PythonOrgSearch(unittest.TestCase):
         element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[2]/div/a")
         element.click()
 
-
-
         for i in range(2):
             # click on product
             element = driver.find_element(By.XPATH, f"/html/body/main/section/div/div[2]/section/section/div[3]/div[1]/div[{i+1}]/article/div/div[1]/a/img")
@@ -93,8 +91,7 @@ class PythonOrgSearch(unittest.TestCase):
             element.click()
 
         # click basket
-        element = driver.find_element(By.XPATH, "/html/body/main/header/nav/div/div/div[2]/div[2]/div/div/a/i")
-        element.click()
+        driver.get("https://10.144.0.1/prestashop/koszyk?action=show")
         assert "10 sztuk" in driver.page_source
         time.sleep(4)
 
@@ -129,8 +126,7 @@ class PythonOrgSearch(unittest.TestCase):
 
         time.sleep(1)
         # click on basket
-        element = driver.find_element(By.XPATH, "/html/body/main/header/nav/div/div/div[2]/div[2]/div/div/a/i")
-        element.click()
+        driver.get("https://10.144.0.1/prestashop/koszyk?action=show")
         time.sleep(1)
         # assert 2 products
         assert "2 sztuk" in driver.page_source
