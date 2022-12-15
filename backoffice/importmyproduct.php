@@ -1,8 +1,8 @@
 <?php
-set_time_limit(30000);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+    set_time_limit(0);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
     // Check if _PS_ADMIN_DIR_ is defined
     if (!defined('_PS_ADMIN_DIR_')) {
         // if _PS_ADMIN_DIR_ is not defined, define.
@@ -15,16 +15,13 @@ error_reporting(E_ALL);
     // Check if the client use the correct secure_key, url to use: www.yourstore.com/yourbackoffice/importmyproduct.php?secure_key=ed3fa1ce558e1c2528cfbaa3f99403
     if(!Tools::getValue('secure_key') || Tools::getValue('secure_key') != $secure_key) {
         // If the secure_key is not set our not equal the php page will stop running.
-        die('UNAUTHORIZED: We dont want you on this page!');
+        die('Warning: We dont want you on this page!');
     }
     echo 'Welcome, the secure_key you have used is correct. Now we can start adding product programmatically ... <br>';
    
-    function addProduct($ean13, $ref, $name, $qty, $text, $features, $price, $imgUrl, $category_id) {
+    function addProduct($ref, $name, $qty, $text, $features, $price, $imgUrls, $category_id) {
         $product = new Product();              // Create new product in prestashop
-        // $product->ean13 = $ean13;
-
         if (!empty($ref)){
-            // $product->reference = $ref;
             $product->meta_description = htmlspecialchars($ref);
             $product->meta_title = htmlspecialchars($ref);
             $product->description_short = htmlspecialchars($ref);
@@ -36,18 +33,17 @@ error_reporting(E_ALL);
         $product->redirect_type = '301';
 
         if ($price > 0){
-            $product->price = number_format(fdiv($price, 1.23), 6, '.', '');
+            $price = ($price / 1.23);
+            $product->price = number_format($price, 6, '.', '');
             $product->show_price = 1;
-
         }
 
         else {
             var_dump($price);
-            $product->price = '0.0' ;
+            $product->price = '0.0';
             $product->show_price = 0;
             $qty = 0;
         }
-        var_dump($price);
 
         $product->id_tax_rules_group = 1;
         $product->minimal_quantity = 1;
@@ -63,6 +59,7 @@ error_reporting(E_ALL);
         }
         StockAvailable::setQuantity($product->id, null, $qty); // id_product, id_product_attribute, quantity
         $product->addToCategories(array($category_id));     // After product is submitted insert all categories
+
         // Insert "feature name" and "feature value"
         if (is_array($features)) {
             $array_kv = array();
@@ -102,14 +99,20 @@ error_reporting(E_ALL);
 
         // add product image.
         $shops = Shop::getShops(true, null, true);
-        $image = new Image();
-        $image->id_product = $product->id;
-        $image->position = Image::getHighestPosition($product->id) + 1;
-        $image->cover = true;
-        if (($image->validateFields(false, true)) === true && ($image->validateFieldsLang(false, true)) === true && $image->add()) {
-            $image->associateTo($shops);
-            if (!uploadImage($product->id, $image->id, $imgUrl)) {
-                $image->delete();
+        $cover = true;
+        foreach ($imgUrls as $imgUrl) {
+            $image = new Image();
+            $imgUrl = "http://10.144.0.1/prestashop/$imgUrl";
+
+            $image->id_product = $product->id;
+            $image->position = Image::getHighestPosition($product->id) + 1;
+            $image->cover = $cover;
+            $cover = false;
+            if (($image->validateFields(false, true)) === true && ($image->validateFieldsLang(false, true)) === true && $image->add()) {
+                $image->associateTo($shops);
+                if (!uploadImage($product->id, $image->id, $imgUrl)) {
+                    $image->delete();
+                }
             }
         }
         echo 'Product added successfully (ID: ' . $product->id . ')';
@@ -117,7 +120,7 @@ error_reporting(E_ALL);
 
     function createMultiLangField($field) {
         $res = array();
-        foreach (Language::getIDs(false) as $id_lang) {
+        foreach ( Language::getIDs(false) as $id_lang ) {
             $res[$id_lang] = $field;
         }
         return $res;
@@ -158,31 +161,35 @@ error_reporting(E_ALL);
         }
     }
 
-
     function file_get_contents_utf8($fn) {
         $content = file_get_contents($fn);
          return mb_convert_encoding($content, 'UTF-8',
              mb_detect_encoding($content, 'UTF-8, ISO-8859-1', true));
    }
 
+   function clearDatabases(){
+        // Clear categories, products, features
+        Db::getInstance()->execute('TRUNCATE TABLE ps_product;');
+        Db::getInstance()->execute('TRUNCATE TABLE ps_product_shop;');
+        Db::getInstance()->execute('TRUNCATE TABLE ps_product_lang;');
+
+        Db::getInstance()->execute('TRUNCATE TABLE ps_image;');
+        Db::getInstance()->execute('TRUNCATE TABLE ps_image_shop;');
+        Db::getInstance()->execute('TRUNCATE TABLE ps_image_lang;');
+
+
+        Db::getInstance()->execute('TRUNCATE TABLE ps_feature;');
+        Db::getInstance()->execute('TRUNCATE TABLE ps_feature_shop;');
+        Db::getInstance()->execute('TRUNCATE TABLE ps_feature_lang;');
+
+        Db::getInstance()->execute('TRUNCATE TABLE ps_feature_value;');
+        Db::getInstance()->execute('TRUNCATE TABLE ps_feature_value_lang;');
+        Db::getInstance()->execute('TRUNCATE TABLE ps_feature_product;');
+
+        Db::getInstance()->execute('DELETE FROM ps_category WHERE id_category>2;');
+   }
+
    function addCategory($category, $categories, $id_parrent){
-       // Temporary not used - useful when displaying categories names
-        $categories_names = array(
-            'zarowki'  => 'Żarówki',
-            'tasmy-led' => "Tasmy LED",
-            'oprawy-najazdowe' => 'Oprawy najazdowe',
-            'oprawy-wpuszczane'  => "Oprawy wpuszczane",
-            'kinkiety' => "Kinkiety",
-            'lampy-stojace' => "Lampy Stojące",
-            'lampy-wiszace-i-zyrandole'  => "Lampy wiszące i żyrandole",
-            'wentylatory' => "Wentylatory",
-            'plafony-zewnetrzne' => "Plafony zewnętrzne",
-            'lampy-ogrodowe-stojace'  => "Lampy ogrodowe stojące",
-            'lampy-zewnetrzne-wiszace' => "Lampy zewnętrzne wiszące",
-            'Oswietlenie' => "Oswietlenie",
-            'Do ogrodu' => "Do ogrodu",
-            'Do wnetrz' => "Do wnetrz"
-        );
         $object = new Category();
         $link = Tools::link_rewrite($category);
 
@@ -191,52 +198,30 @@ error_reporting(E_ALL);
 
         foreach (Language::getLanguages(false) as $lang){
             $object->name[$lang['id_lang']] = $category ;
-            // $object->name[$lang['id_lang']] = $categories_names[$category] ;
-
             $object->link_rewrite[$lang['id_lang']] = $link;
         }
+
         $object->id_parent = $id_parrent;
         $object->add();
         echo 'Category added successfully (ID: ' . $object->id . ')';
         return array('name' => $category, 'id' => $object->id);
    }
 
-
    $categories = array(
                         array('Oswietlenie', array('zarowki', 'tasmy-led', 'oprawy-najazdowe', 'oprawy-wpuszczane')),
                         array('Do wnetrz', array('kinkiety', 'lampy-stojace', 'lampy-wiszace-i-zyrandole', 'wentylatory')),
                         array('Do ogrodu', array('plafony-zewnetrzne', 'lampy-ogrodowe-stojace', 'lampy-zewnetrzne-wiszace'))
                         );
-
-
-
-    $string = file_get_contents_utf8("/var/www/html/products_un.json");
+    clearDatabases();
+    $string = file_get_contents_utf8("/var/www/html/prestashop/products_data/products.json");
     $json_a = json_decode($string, true);
     $categories_id = array();
     
-    // Clear categories, products, features
-    Db::getInstance()->execute('TRUNCATE TABLE ps_product;');
-    Db::getInstance()->execute('TRUNCATE TABLE ps_product_shop;');
-    Db::getInstance()->execute('TRUNCATE TABLE ps_product_lang;');
-
-    Db::getInstance()->execute('TRUNCATE TABLE ps_image;');
-    Db::getInstance()->execute('TRUNCATE TABLE ps_image_shop;');
-    Db::getInstance()->execute('TRUNCATE TABLE ps_image_lang;');
-
-
-    Db::getInstance()->execute('TRUNCATE TABLE ps_feature;');
-    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_shop;');
-    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_lang;');
-
-    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_value;');
-    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_value_lang;');
-    Db::getInstance()->execute('TRUNCATE TABLE ps_feature_product;');
-
-    Db::getInstance()->execute('DELETE FROM ps_category WHERE id_category>2;');
     foreach ($categories as $i => $value) {
         $parrent_id = Configuration::get('PS_HOME_CATEGORY');
         $id_name_array = addCategory($value[0], $categories, $parrent_id);
         array_push($categories_id, $id_name_array);
+
         $parrent_id = $id_name_array['id'];
         foreach ($value[1] as $j => $category) {
             $id_name_array = addCategory($category, $categories, $parrent_id);
@@ -244,21 +229,18 @@ error_reporting(E_ALL);
         }
     }
 
-    // $array=$clusters[$key];
-
     foreach ($json_a as $product_item => $product_i) {
         $key=array_multi_search($product_i['category'], $categories_id);
 
         addProduct(
-            '1234567891234',                         // Product EAN13
-            trim($product_i['short_about']),                         // Product reference
-            $product_i['name'],                               // Product name
-            5,                                       // Product quantity
+            $product_i['short_about'],              // Product reference
+            $product_i['name'],                     // Product name
+            rand(10, 50),                           // Product quantity
             $product_i['description'],              // Product description
-            $product_i['attributes'],
-            str_replace(' ', '', str_replace(',', '.', $product_i['price'])),                                // Product price
-            $product_i['img'],       // Product image
-            $categories_id[$key]['id'],                                       // Product default category
+            $product_i['attributes'],               // Product attributes
+            $product_i['price'],                    // Product price
+            $product_i['images'],                   // Product images
+            $categories_id[$key]['id'],             // Product default category
         );
     }
     
