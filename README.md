@@ -12,6 +12,7 @@ https://www.skleplampy.pl/.
 * `backoffice/importmyproduct.php` - skrypt PHP pozwalający na umieszczenie wyników scrappowania w skonfigurowanym sklepie
 * `add_attributes.py` - skrypt dodający "atrybuty" tj. warianty produktów do istniejącej bazy danych Prestashop
 * `tests/` - testy funkcjonalne witryny wykorzystujące bibliotekę Sellenium
-* `requirements.txt` - dependencje dla skryptów Python.
+* `requirements.txt` - dependencje dla skryptów Python
+* `backup/` - katalog z kopiami zapasowymi bazy danych Prestashop.
 
 Szczegółowe informacje dotyczące wykorzystania każdego z nich znajdują się w komentarzach i dokumentacji wykorzystanych bibliotek.
