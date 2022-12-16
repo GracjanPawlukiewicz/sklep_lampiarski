@@ -2,8 +2,38 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import glob
+import urllib.request
+from PIL import Image
 
-def get_links(page_link) -> list:
+
+def download_and_convert_photos(images: list) -> list: 
+    """Method used to download images from ist with links which are supposed to be webp images and
+    convert them to jpg images
+
+    Args:
+        images (list): List with links to webp images
+
+    Returns:
+        list: List with paths to jpg images
+    """
+    jpg_paths = []
+    for image in images:
+        # download and save image
+        filename = image.split('/')[-1]
+        path = f"images/produkty_webp/{filename}"
+        urllib.request.urlretrieve(image, path)
+
+        # convert .webp images to .jpg as prestashop 1.7 doesnt support webp 
+        im = Image.open(path).convert("RGB")
+        # remove extension and append .jpg
+        filename = f"{filename.rsplit('.', 1)[0]}.jpg"
+        path = f"images/produkty_jpg/{filename}"
+        im.save(path,"jpeg")
+        jpg_paths.append(path)
+    return jpg_paths
+
+
+def get_links(page_link: str) -> list:
     """
     Method used to get links of product in store
     
@@ -58,17 +88,19 @@ def get_data(products_links: list, headers: dict) -> list:
 
 
             try:
-                price = bs.find("strong", {"class":"produkt-cena"}).text.replace('\n',"").strip()
+                price = bs.find("strong", {"class":"produkt-cena"}).text.replace('\n',"").strip().replace(" ", "")
+                # remove zl from price, replace , with .
+                price = price[:-2].replace(',', '.')
             except:
-                price = None
+                price = "0.0"
                 
                 
             try:
-                short_about = bs.find("div", {"class":"product-short-description"}).text.replace('\n',"")
+                short_about = bs.find("div", {"class":"product-short-description"}).text.replace('\n',"").strip()
             except:
                 short_about=None
                 
-                
+            
             try:
                 selection = []
                 selector_description = bs.find("label", {"class":"col-sm-4"}).text.replace('\n',"")
@@ -95,13 +127,19 @@ def get_data(products_links: list, headers: dict) -> list:
                     value = row.find('td').text
                     attributes[key] = value        
             except:
-                attributes=None
+                attributes = None
                 
                 
             try:
-                img = bs.find("a", {"class":"fotka"}).get("href")
+                images = []
+                img_divs = bs.find_all("div", {"class":"image"})
+                for image_link in img_divs:
+                    images.append(image_link.find("img").get("src"))
+                    
+                images = download_and_convert_photos(images)
+
             except:
-                img = None
+                images = [None]
                 
             lamp = {"category": category,
                     "name": name,
@@ -111,7 +149,7 @@ def get_data(products_links: list, headers: dict) -> list:
                     "selection": selection,
                     "description": description,
                     "attributes": attributes,
-                    "img": img
+                    "images": images
                     }
             
             data.append(lamp)
@@ -123,7 +161,7 @@ def retrieve_links() -> dict:
     Returns:
         _type_: _description_
     """
-    for file in glob.glob("./products_data/*.json"):
+    for file in glob.glob("./products_data/links.json"):
         print(file)
         with open(file, 'r', encoding="UTF-8") as infile:
             data = json.load(infile)
@@ -153,7 +191,7 @@ def save_links():
         category_name = ''.join([i for i in link.split('/')[-1] if not i.isdigit()])
         links[category_name[:-1]] = get_links(page_link=link)
             
-    with open("./products_data/links.json", 'w', encoding="UTF-8") as outfile:
+    with open("./products_data/lc.json", 'w', encoding="UTF-8") as outfile:
         json.dump(links, outfile, ensure_ascii=False, indent=4)
         
 if __name__ == '__main__':
