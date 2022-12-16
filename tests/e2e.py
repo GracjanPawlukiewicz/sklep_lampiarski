@@ -44,6 +44,10 @@ class LampexTest(unittest.TestCase):
         element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[2]/div/a")
         element.click()
         for i in range(5):
+            element = driver.find_element(By.XPATH, "//*[contains(text(), 'Dostępny')]")
+            element.click()
+            time.sleep(4)
+
             # click on product
             element = driver.find_element(By.XPATH,
                                           f"/html/body/main/section/div/div[2]/section/section/div[3]/div[1]/div[{i + 1}]/article/div/div[1]/a/img")
@@ -76,6 +80,10 @@ class LampexTest(unittest.TestCase):
         element.click()
 
         for i in range(5):
+            element = driver.find_element(By.XPATH, "//*[contains(text(), 'Dostępny')]")
+            element.click()
+            time.sleep(4)
+
             # click on product
             element = driver.find_element(By.XPATH,
                                           f"/html/body/main/section/div/div[2]/section/section/div[3]/div[1]/div[{i + 1}]/article/div/div[1]/a/img")
