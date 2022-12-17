@@ -10,15 +10,7 @@
     }
     // Setup connection with config.inc.php (required for database connection, ...)
     include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
-    $secure_key = 'ed3fa1ce558e1c2528cfbaa3f99403';
 
-    // Check if the client use the correct secure_key, url to use: www.yourstore.com/yourbackoffice/importmyproduct.php?secure_key=ed3fa1ce558e1c2528cfbaa3f99403
-    if(!Tools::getValue('secure_key') || Tools::getValue('secure_key') != $secure_key) {
-        // If the secure_key is not set our not equal the php page will stop running.
-        die('Warning: We dont want you on this page!');
-    }
-    echo 'Welcome, the secure_key you have used is correct. Now we can start adding product programmatically ... <br>';
-   
     function addProduct($ref, $name, $qty, $text, $features, $price, $imgUrls, $category_id) {
         $product = new Product();              // Create new product in prestashop
         if (!empty($ref)){
