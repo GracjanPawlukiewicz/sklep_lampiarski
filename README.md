@@ -16,3 +16,39 @@ https://www.skleplampy.pl/.
 * `backup/` - katalog z kopiami zapasowymi bazy danych Prestashop.
 
 Szczegółowe informacje dotyczące wykorzystania każdego z nich znajdują się w komentarzach i dokumentacji wykorzystanych bibliotek.
+
+## Uruchomenie
+
+### Docker (lokalnie)
+
+Uruchomienie bazy danych:
+```
+docker network create prestashop-net
+docker run -ti --name mysql --network prestashop-net -e MYSQL_ROOT_PASSWORD=student -p 3307:3306 -d mysql:5.7
+echo "DROP DATABASE IF EXISTS prestashop; CREATE DATABASE prestashop;" | mysql -u root -pstudent -h 127.0.0.1 -P 3307
+```
+
+Budowanie obrazu Prestashop:
+```
+docker build . -t lumos
+```
+
+Uruchomienie sklepu:
+```
+docker run -ti --name prestashop --network prestashop-net -e DB_SERVER=mysql -e DB_PASSWD=student -e PS_INSTALL_AUTO=1 -e PS_DOMAIN=localhost:8080 -e PS_LANGUAGE=pl -e PS_COUNTRY=PL -e PS_FOLDER_ADMIN=admin1 -p 8080:80 -d lumos
+```
+
+Inicjalizacja bazy danych (**po uruchomieniu sklepu** - dostępność przez [localhost:8080](http://localhost:8080)):
+```
+./init_db.sh
+```
+
+Dostęp do panelu administracyjnego:
+* Adres - [localhost:8080/admin1](http://localhost:8080/admin1)
+* Credentials - jan.kowalski@lampexpol.pl:biznes123
+
+Cleanup:
+```
+docker kill mysql prestashop
+docker rm mysql prestashop
+```
