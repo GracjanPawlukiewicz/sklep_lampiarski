@@ -2,8 +2,8 @@ services:
   Lumos:
     image: docker.io/mduchalski/lumos
     ports:
-      - 80:8080
-      - 443:10001
+      - 8080:80
+      - 10001:443
     environment:
       - DB_SERVER=mysql # Change for deployment
       - DB_NAME=Lumos # Review if change needed
