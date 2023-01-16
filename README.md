@@ -59,3 +59,11 @@ docker rm mysql
 docker compose kill
 docker compose rm -vf
 ```
+
+Szybki rerun - bez restartu MySQL:
+```
+docker compose kill
+docker compose rm -vf
+./init_db.sh createonly
+docker compose up -d
+```
