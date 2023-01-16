@@ -1,0 +1,22 @@
+services:
+  Lumos:
+    image: docker.io/mduchalski/lumos
+    ports:
+      - 80:8080
+      - 443:10001
+    environment:
+      - DB_SERVER=mysql # Change for deployment
+      - DB_NAME=Lumos # Review if change needed
+      - DB_USER=Lumos # Review if change needed
+      - DB_PASSWD=lampexpol
+      - PS_INSTALL_AUTO=1
+      - PS_DOMAIN=localhost:8080 # Change for depoloyment
+      - PS_LANGUAGE=pl
+      - PS_COUNTRY=PL
+      - PS_FOLDER_ADMIN=admin1
+    networks: # Remove for deployment
+      - prestashop-net
+
+networks: # Remove for deployment
+  prestashop-net:
+    external: True

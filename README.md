@@ -21,21 +21,26 @@ Szczegółowe informacje dotyczące wykorzystania każdego z nich znajdują się
 
 ### Docker (lokalnie)
 
-Uruchomienie bazy danych:
+Uruchomienie bazy danych (przywrócona baza danych zostanie nadpisana przez instalator):
 ```
 docker network create prestashop-net
 docker run -ti --name mysql --network prestashop-net -e MYSQL_ROOT_PASSWORD=student -p 3307:3306 -d mysql:5.7
-echo "DROP DATABASE IF EXISTS prestashop; CREATE DATABASE prestashop;" | mysql -u root -pstudent -h 127.0.0.1 -P 3307
+./init_db.sh createonly
 ```
 
 Budowanie obrazu Prestashop:
 ```
-docker build . -t lumos
+docker build . -t docker.io/mduchalski/lumos
+```
+
+Aktualizacja obrazu w registry:
+```
+docker push docker.io/mduchalski/lumos
 ```
 
 Uruchomienie sklepu:
 ```
-docker run -ti --name prestashop --network prestashop-net -e DB_SERVER=mysql -e DB_PASSWD=student -e PS_INSTALL_AUTO=1 -e PS_DOMAIN=localhost:8080 -e PS_LANGUAGE=pl -e PS_COUNTRY=PL -e PS_FOLDER_ADMIN=admin1 -p 8080:80 -d lumos
+docker compose up -d
 ```
 
 Inicjalizacja bazy danych (**po uruchomieniu sklepu** - dostępność przez [localhost:8080](http://localhost:8080)):
@@ -49,6 +54,8 @@ Dostęp do panelu administracyjnego:
 
 Cleanup:
 ```
-docker kill mysql prestashop
-docker rm mysql prestashop
+docker kill mysql
+docker rm mysql
+docker compose kill
+docker compose rm -vf
 ```
