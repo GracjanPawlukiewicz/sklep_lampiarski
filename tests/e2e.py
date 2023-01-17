@@ -15,6 +15,8 @@ import random
 import string
 
 
+BASE_URL = "localhost:10001"
+
 def get_random_string(length: int) -> str:
     # choose from all lowercase letter
     letters = string.ascii_lowercase
@@ -37,49 +39,38 @@ class LampexTest(unittest.TestCase):
         ## TEST 10 PRODUCTS DIFFERENT CATEGORIES
 
         driver = self.driver
-        driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
-        element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[1]/div/a")
-        element.click()
+        # driver.get(f"https://{BASE_URL}/934-oswietlenie")
+        #
+        # for i in range(5):
+        #     element = driver.find_element(By.XPATH, "//*[contains(text(), 'Dostępny')]")
+        #     element.click()
+        #     time.sleep(4)
+        #
+        #     # click on product
+        #     element = driver.find_element(By.XPATH,
+        #                                   f"/html/body/main/section/div/div[2]/section/section/div[3]/div[1]/div[{i + 1}]/article/div/div[1]/a/img")
+        #     element.click()
+        #     # click on amount
+        #     element = driver.find_element(By.XPATH,
+        #                                   "/html/body/main/section/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/span[3]/button[1]/i")
+        #     for j in range(i%2):
+        #         element.click()
+        #     # click buy
+        #     element = driver.find_element(By.XPATH,
+        #                                   "/html/body/main/section/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div/div[2]/button")
+        #     element.click()
+        #     time.sleep(2)
+        #     # click continue shopping
+        #     element = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/button")
+        #     element.click()
+        #     time.sleep(2)
+        #     driver.get(f"https://{BASE_URL}/934-oswietlenie")
 
-        element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[2]/div/a")
-        element.click()
-        for i in range(5):
-            element = driver.find_element(By.XPATH, "//*[contains(text(), 'Dostępny')]")
-            element.click()
-            time.sleep(4)
+        driver.get(f"https://{BASE_URL}/939-do-wnetrz")
 
-            # click on product
-            element = driver.find_element(By.XPATH,
-                                          f"/html/body/main/section/div/div[2]/section/section/div[3]/div[1]/div[{i + 1}]/article/div/div[1]/a/img")
-            element.click()
-            # click on amount
-            element = driver.find_element(By.XPATH,
-                                          "/html/body/main/section/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/span[3]/button[1]/i")
-            for j in range(i%2):
-                element.click()
-            # click buy
-            element = driver.find_element(By.XPATH,
-                                          "/html/body/main/section/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div/div[2]/button")
-            element.click()
-            time.sleep(2)
-            # click continue shopping
-            element = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/button")
-            element.click()
-            time.sleep(2)
-            driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
-            element = driver.find_element(By.XPATH,
-                                          "/html/body/main/section/div/div[2]/section/div[2]/ul/li[1]/div/a")
-            element.click()
-
-            element = driver.find_element(By.XPATH,
-                                          "/html/body/main/section/div/div[2]/section/div[2]/ul/li[2]/div/a")
-            element.click()
-        driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
-
-        element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[2]/div/a")
-        element.click()
 
         for i in range(5):
+            time.sleep(1)
             element = driver.find_element(By.XPATH, "//*[contains(text(), 'Dostępny')]")
             element.click()
             time.sleep(4)
@@ -101,16 +92,14 @@ class LampexTest(unittest.TestCase):
             # click continue shopping
             element = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/button")
             element.click()
-            time.sleep(1)
-            driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
+            time.sleep(2)
+            driver.get(f"https://{BASE_URL}/939-do-wnetrz")
 
-            element = driver.find_element(By.XPATH,
-                                          "/html/body/main/section/div/div[2]/section/div[2]/ul/li[2]/div/a")
-            element.click()
 
+        time.sleep(10)
         # REMOVE ELEMENT FROM BASKET
         # click basket
-        driver.get("https://10.144.0.1/prestashop/koszyk?action=show")
+        driver.get(f"https://{BASE_URL}/koszyk?action=show")
         time.sleep(5)
         element = driver.find_element(By.XPATH,
                                       "/html/body/main/section/div/div/section/div/div[1]/div/div[2]/ul/li/div/div[3]/div/div[3]/div/a/i")
@@ -204,7 +193,7 @@ class LampexTest(unittest.TestCase):
         assert "Twoje zamówienie zostało potwierdzone" in driver.page_source
         time.sleep(5)
 
-        driver.get("https://10.144.0.1/prestashop/historia-zamowien")
+        driver.get(f"https://{BASE_URL}/historia-zamowien")
 
         assert "Oczekiwanie na płatność" in driver.page_source
 

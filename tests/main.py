@@ -15,6 +15,8 @@ import random
 import string
 
 
+BASE_URL = "localhost:10001"
+
 def get_random_string(length: int) -> str:
     # choose from all lowercase letter
     letters = string.ascii_lowercase
@@ -36,7 +38,7 @@ class LampexTest(unittest.TestCase):
 
     def test_is_10_products_different_categories(self):
         driver = self.driver
-        driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
+        driver.get(f"https://{BASE_URL}/prestashop/2-strona-glowna")
         element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[1]/div/a")
         element.click()
 
@@ -58,13 +60,13 @@ class LampexTest(unittest.TestCase):
             element = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/button")
             element.click()
             time.sleep(1)
-            driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
+            driver.get(f"https://{BASE_URL}/prestashop/2-strona-glowna")
             element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[1]/div/a")
             element.click()
 
             element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[2]/div/a")
             element.click()
-        driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
+        driver.get(f"https://{BASE_URL}/prestashop/2-strona-glowna")
 
         element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[2]/div/a")
         element.click()
@@ -85,19 +87,19 @@ class LampexTest(unittest.TestCase):
             element = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/button")
             element.click()
             time.sleep(1)
-            driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
+            driver.get(f"https://{BASE_URL}/prestashop/2-strona-glowna")
 
             element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[2]/div/a")
             element.click()
 
         # click basket
-        driver.get("https://10.144.0.1/prestashop/koszyk?action=show")
+        driver.get(f"https://{BASE_URL}/prestashop/koszyk?action=show")
         assert "10 sztuk" in driver.page_source
         time.sleep(4)
 
     def test_delete_1_element_from_basket(self):
         driver = self.driver
-        driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
+        driver.get(f"https://{BASE_URL}/prestashop/2-strona-glowna")
         element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[1]/div/a")
         element.click()
 
@@ -117,7 +119,7 @@ class LampexTest(unittest.TestCase):
             element = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/button")
             element.click()
             time.sleep(1)
-            driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
+            driver.get(f"https://{BASE_URL}/prestashop/2-strona-glowna")
             element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[1]/div/a")
             element.click()
 
@@ -126,7 +128,7 @@ class LampexTest(unittest.TestCase):
 
         time.sleep(1)
         # click on basket
-        driver.get("https://10.144.0.1/prestashop/koszyk?action=show")
+        driver.get(f"https://{BASE_URL}/prestashop/koszyk?action=show")
         time.sleep(1)
         # assert 2 products
         assert "2 sztuk" in driver.page_source
@@ -142,7 +144,7 @@ class LampexTest(unittest.TestCase):
 
     def test_setup_new_account(self):
         driver = self.driver
-        driver.get("https://10.144.0.1/prestashop/logowanie?create_account=1")
+        driver.get(f"https://{BASE_URL}/prestashop/logowanie?create_account=1")
 
 
         element = driver.find_element("name", "id_gender")
@@ -180,7 +182,7 @@ class LampexTest(unittest.TestCase):
 
     def test_payment_at_delivery(self):
         driver = self.driver
-        driver.get("https://10.144.0.1/prestashop/2-strona-glowna")
+        driver.get(f"https://{BASE_URL}/prestashop/2-strona-glowna")
         element = driver.find_element(By.XPATH, "/html/body/main/section/div/div[2]/section/div[2]/ul/li[1]/div/a")
         element.click()
 
@@ -277,7 +279,7 @@ class LampexTest(unittest.TestCase):
 
     def test_order_status(self):
         driver = self.driver
-        driver.get("https://10.144.0.1/prestashop/logowanie?back=my-account")
+        driver.get(f"https://{BASE_URL}/prestashop/logowanie?back=my-account")
 
         element = driver.find_element("name", "email")
         element.send_keys("switala.alb@gmail.com")
@@ -290,7 +292,7 @@ class LampexTest(unittest.TestCase):
 
         time.sleep(1)
 
-        driver.get("https://10.144.0.1/prestashop/historia-zamowien")
+        driver.get(f"https://{BASE_URL}/prestashop/historia-zamowien")
 
         assert "Oczekiwanie na płatność przelewem" in driver.page_source
 
