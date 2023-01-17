@@ -39,32 +39,32 @@ class LampexTest(unittest.TestCase):
         ## TEST 10 PRODUCTS DIFFERENT CATEGORIES
 
         driver = self.driver
-        # driver.get(f"https://{BASE_URL}/934-oswietlenie")
-        #
-        # for i in range(5):
-        #     element = driver.find_element(By.XPATH, "//*[contains(text(), 'Dostępny')]")
-        #     element.click()
-        #     time.sleep(4)
-        #
-        #     # click on product
-        #     element = driver.find_element(By.XPATH,
-        #                                   f"/html/body/main/section/div/div[2]/section/section/div[3]/div[1]/div[{i + 1}]/article/div/div[1]/a/img")
-        #     element.click()
-        #     # click on amount
-        #     element = driver.find_element(By.XPATH,
-        #                                   "/html/body/main/section/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/span[3]/button[1]/i")
-        #     for j in range(i%2):
-        #         element.click()
-        #     # click buy
-        #     element = driver.find_element(By.XPATH,
-        #                                   "/html/body/main/section/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div/div[2]/button")
-        #     element.click()
-        #     time.sleep(2)
-        #     # click continue shopping
-        #     element = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/button")
-        #     element.click()
-        #     time.sleep(2)
-        #     driver.get(f"https://{BASE_URL}/934-oswietlenie")
+        driver.get(f"https://{BASE_URL}/934-oswietlenie")
+
+        for i in range(5):
+            element = driver.find_element(By.XPATH, "//*[contains(text(), 'Dostępny')]")
+            element.click()
+            time.sleep(4)
+
+            # click on product
+            element = driver.find_element(By.XPATH,
+                                          f"/html/body/main/section/div/div[2]/section/section/div[3]/div[1]/div[{i + 1}]/article/div/div[1]/a/img")
+            element.click()
+            # click on amount
+            element = driver.find_element(By.XPATH,
+                                          "/html/body/main/section/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div/div[1]/div/span[3]/button[1]/i")
+            for j in range(i%2):
+                element.click()
+            # click buy
+            element = driver.find_element(By.XPATH,
+                                          "/html/body/main/section/div/div/section/div[1]/div[2]/div[2]/div[2]/form/div[2]/div/div[2]/button")
+            element.click()
+            time.sleep(2)
+            # click continue shopping
+            element = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/div/div[2]/div/div/button")
+            element.click()
+            time.sleep(2)
+            driver.get(f"https://{BASE_URL}/934-oswietlenie")
 
         driver.get(f"https://{BASE_URL}/939-do-wnetrz")
 
