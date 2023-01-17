@@ -24,7 +24,7 @@ Szczegółowe informacje dotyczące wykorzystania każdego z nich znajdują się
 Uruchomienie bazy danych (przywrócona baza danych zostanie nadpisana przez instalator):
 ```
 docker network create prestashop-net
-docker run -ti --name mysql --network prestashop-net -e MYSQL_ROOT_PASSWORD=student -p 3307:3306 -d mysql:5.7
+docker run -ti --name actina15.maas --network prestashop-net -e MYSQL_ROOT_PASSWORD=student -p 3307:3306 -d mysql:5.7
 ./init_db.sh createonly
 ```
 
@@ -43,19 +43,19 @@ Aktualizacja obrazu w registry:
 docker push docker.io/mduchalski/lumos
 ```
 
-Inicjalizacja bazy danych (**po uruchomieniu sklepu** - dostępność przez [localhost:8080](http://localhost:8080)):
+Inicjalizacja bazy danych (**po uruchomieniu sklepu** - dostępność przez [localhost:17154](https://localhost:17154)):
 ```
 ./init_db.sh
 ```
 
 Dostęp do panelu administracyjnego:
-* Adres - [localhost:8080/admin1](http://localhost:8080/admin1)
+* Adres - [localhost:17154/admin1](https://localhost:17154/admin1)
 * Credentials - jan.kowalski@lampexpol.pl:biznes123
 
 Cleanup:
 ```
-docker kill mysql
-docker rm mysql
+docker kill actina15.maas
+docker rm actina15.maas
 docker compose kill
 docker compose rm -vf
 ```
