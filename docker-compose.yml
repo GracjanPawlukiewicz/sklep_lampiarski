@@ -4,14 +4,14 @@ services:
   Lumos:
     image: docker.io/mduchalski/lumos
     ports:
-      - 10001:443
+      - 17154:443
     environment:
-      - DB_SERVER=mysql # Change for deployment
-      - DB_NAME=Lumos # Review if change needed
-      - DB_USER=Lumos # Review if change needed
+      - DB_SERVER=actina15.maas
+      - DB_NAME=BE_171547
+      - DB_USER=BE_171547
       - DB_PASSWD=lampexpol
       - PS_INSTALL_AUTO=1
-      - PS_DOMAIN=localhost:10001 # Change for depoloyment
+      - PS_DOMAIN=localhost:17154
       - PS_LANGUAGE=pl
       - PS_COUNTRY=PL
       - PS_FOLDER_ADMIN=admin1
