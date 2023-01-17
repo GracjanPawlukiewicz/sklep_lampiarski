@@ -30,7 +30,7 @@ docker run -ti --name mysql --network prestashop-net -e MYSQL_ROOT_PASSWORD=stud
 
 Uruchomienie sklepu:
 ```
-docker compose up -d
+docker-compose up -d
 ```
 
 Budowanie obrazu Prestashop:
