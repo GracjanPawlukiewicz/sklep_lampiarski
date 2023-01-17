@@ -28,6 +28,11 @@ docker run -ti --name mysql --network prestashop-net -e MYSQL_ROOT_PASSWORD=stud
 ./init_db.sh createonly
 ```
 
+Uruchomienie sklepu:
+```
+docker compose up -d
+```
+
 Budowanie obrazu Prestashop:
 ```
 docker build . -t docker.io/mduchalski/lumos
@@ -36,11 +41,6 @@ docker build . -t docker.io/mduchalski/lumos
 Aktualizacja obrazu w registry:
 ```
 docker push docker.io/mduchalski/lumos
-```
-
-Uruchomienie sklepu:
-```
-docker compose up -d
 ```
 
 Inicjalizacja bazy danych (**po uruchomieniu sklepu** - dostępność przez [localhost:8080](http://localhost:8080)):
