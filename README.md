@@ -17,9 +17,31 @@ https://www.skleplampy.pl/.
 
 Szczegółowe informacje dotyczące wykorzystania każdego z nich znajdują się w komentarzach i dokumentacji wykorzystanych bibliotek.
 
-## Uruchomenie
+## Docker
 
-### Docker (lokalnie)
+### Budowanie
+
+Budowanie obrazu Prestashop:
+```
+docker build . -t docker.io/mduchalski/lumos
+```
+
+Aktualizacja obrazu w registry:
+```
+docker push docker.io/mduchalski/lumos
+```
+
+Aktualizacja plików `backup/*.tar.gz` potrzebnych do budowania obrazu (założenie: działający lokalnie kontener):
+```
+./update_backup.sh
+```
+
+Generowanie certyfikatu:
+```
+./gen_cert.sh
+```
+
+### Uruchomienie (lokalnie)
 
 Uruchomienie bazy danych (przywrócona baza danych zostanie nadpisana przez instalator):
 ```
@@ -31,16 +53,6 @@ docker run -ti --name actina15.maas --network prestashop-net -e MYSQL_ROOT_PASSW
 Uruchomienie sklepu:
 ```
 docker-compose up -d
-```
-
-Budowanie obrazu Prestashop:
-```
-docker build . -t docker.io/mduchalski/lumos
-```
-
-Aktualizacja obrazu w registry:
-```
-docker push docker.io/mduchalski/lumos
 ```
 
 Inicjalizacja bazy danych (**po uruchomieniu sklepu** - dostępność przez [localhost:17154](https://localhost:17154)):
