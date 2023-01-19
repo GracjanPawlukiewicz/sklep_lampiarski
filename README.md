@@ -13,7 +13,8 @@ https://www.skleplampy.pl/.
 * `add_attributes.py` - skrypt dodający "atrybuty" tj. warianty produktów do istniejącej bazy danych Prestashop
 * `tests/` - testy funkcjonalne witryny wykorzystujące bibliotekę Sellenium
 * `requirements.txt` - dependencje dla skryptów Python
-* `backup/` - katalog z kopiami zapasowymi bazy danych Prestashop.
+* `backup/` - katalog z kopiami zapasowymi bazy danych Prestashop
+* `deploy/` - katalog z kopiami plików wykorzystanych do deploymentu na klastrze.
 
 Szczegółowe informacje dotyczące wykorzystania każdego z nich znajdują się w komentarzach i dokumentacji wykorzystanych bibliotek.
 
