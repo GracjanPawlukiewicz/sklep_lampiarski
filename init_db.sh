@@ -10,7 +10,7 @@ DB_GLOB_USER="root"
 DB_GLOB_PWD="student"
 DB_NAME_USER="BE_171547"
 DB_PWD="lampexpol"
-BACKUP_FILE="backup/1673996584-214241ee.sql.gz"
+BACKUP_FILE="backup/1674159125-707d0f8d.sql.gz"
 DOMAIN="localhost:17154" # Review change for deployment
 
 echo "DROP DATABASE IF EXISTS ${DB_NAME_USER};

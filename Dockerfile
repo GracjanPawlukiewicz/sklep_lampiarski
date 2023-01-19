@@ -6,3 +6,6 @@ COPY backup/apache-selfsigned.key /etc/ssl/private/
 COPY backup/default-ssl.conf /etc/apache2/sites-available/
 RUN a2enmod ssl
 RUN a2ensite default-ssl
+RUN apt-get update && apt-get install -y memcached libmemcached-dev zlib1g-dev \
+	&& pecl install memcached \
+	&& docker-php-ext-enable memcached  

@@ -1,4 +1,5 @@
 #!/bin/bash
+memcached -u root -d
 tar -xf /tmp/modules.tar.gz -C /var/www/html && rm /tmp/modules.tar.gz
 tar -xf /tmp/img.tar.gz -C /var/www/html && rm /tmp/img.tar.gz
 tar -xf /tmp/mails.tar.gz -C /var/www/html && rm /tmp/mails.tar.gz
