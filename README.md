@@ -70,12 +70,14 @@ docker kill actina15.maas
 docker rm actina15.maas
 docker compose kill
 docker compose rm -vf
+docker volume rm sklep_lampiarski_Lumos
 ```
 
 Szybki rerun - bez restartu MySQL:
 ```
 docker compose kill
 docker compose rm -vf
+docker volume rm sklep_lampiarski_Lumos
 ./init_db.sh createonly
 docker compose up -d
 ```
