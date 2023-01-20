@@ -15,7 +15,7 @@ import random
 import string
 
 
-BASE_URL = "localhost:10001"
+BASE_URL = "localhost:17154"
 
 def get_random_string(length: int) -> str:
     # choose from all lowercase letter
@@ -32,6 +32,7 @@ class LampexTest(unittest.TestCase):
         options.add_argument('--ignore-ssl-errors=yes')
         options.add_argument('--ignore-certificate-errors')
         self.driver = webdriver.Chrome(options=options)
+        self.driver.implicitly_wait(30)
 
     # cleanup method called after every test performed
 
